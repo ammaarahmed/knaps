@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Sidebar from "@/components/sidebar";
 import ProductSearch from "@/components/product-search";
+import ProductSearchWithId from "@/components/product-search-with-id";
 import ProductDetails from "@/components/product-details";
 import AddProduct from "@/components/add-product";
 import BulkUpload from "@/components/bulk-upload";
@@ -11,7 +12,7 @@ import DealList from "@/components/deal-list";
 import Analytics from "@/components/analytics";
 import { Store, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserMenu from "@/components/user-menu";
 import {
   Dialog,
   DialogContent,
@@ -40,13 +41,7 @@ export default function ProductManagement() {
               <Button variant="ghost" size="icon">
                 <Bell className="h-5 w-5 text-gray-400" />
               </Button>
-              <div className="flex items-center space-x-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=32&h=32" />
-                  <AvatarFallback>JM</AvatarFallback>
-                </Avatar>
-                <span className="text-sm text-gray-700">John Manager</span>
-              </div>
+              <UserMenu />
             </div>
           </div>
         </div>
@@ -114,7 +109,11 @@ export default function ProductManagement() {
                 <TabsContent value="deals" className="mt-0 h-full">
                   <div className="flex flex-col items-center p-6">
                     <div className="w-full max-w-lg mx-auto">
-                      <ProductSearch onSelectProduct={setSelectedDealProductId} />
+                      <ProductSearchWithId
+                        onSelectProduct={(product) =>
+                          setSelectedDealProductId(product.id)
+                        }
+                      />
                     </div>
                     <div className="mt-4 flex gap-4">
                       <Dialog open={addDealOpen} onOpenChange={setAddDealOpen}>

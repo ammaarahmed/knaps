@@ -6,23 +6,23 @@ import { Product } from "@shared/schema";
 import { API_BASE_URL } from "@/config";
 import { authHeaders } from "@/lib/auth";
 
-interface ProductSearchProps {
-  onSelectProduct: (productCode: string) => void;
+interface ProductSearchWithIdProps {
+  onSelectProduct: (product: Product) => void;
 }
 
-export default function ProductSearch({ onSelectProduct }: ProductSearchProps) {
+export default function ProductSearchWithId({ onSelectProduct }: ProductSearchWithIdProps) {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
 
   const { data: searchResults = [] } = useQuery<Product[]>({
-    queryKey: ['/products/search', query],
+    queryKey: ["/products/search", query],
     queryFn: async () => {
       if (query.length < 2) return [];
       const response = await fetch(
         `${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`,
         { headers: authHeaders() },
       );
-      if (!response.ok) throw new Error('Search failed');
+      if (!response.ok) throw new Error("Search failed");
       return response.json();
     },
     enabled: query.length >= 2,
@@ -33,7 +33,7 @@ export default function ProductSearch({ onSelectProduct }: ProductSearchProps) {
   }, [query, searchResults]);
 
   const handleSelectProduct = (product: Product) => {
-    onSelectProduct(product.product_code);
+    onSelectProduct(product);
     setQuery(product.product_name);
     setShowResults(false);
   };
@@ -51,7 +51,7 @@ export default function ProductSearch({ onSelectProduct }: ProductSearchProps) {
         />
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
       </div>
-      
+
       {showResults && (
         <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
           {searchResults.map((product) => (
